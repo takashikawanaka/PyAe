@@ -10,18 +10,6 @@ def args_parser() -> Namespace:
     # 必須パラメータ
     required_args = parser.add_argument_group("required arguments")
 
-    # 監視ディレクトリ
-    required_args.add_argument(
-        "--path",
-        action="store",
-        nargs="?",
-        default=".",
-        type=str,
-        required=False,
-        help="Target Path",
-        dest="path",
-    )
-
     # コマンド実行
     required_args.add_argument(
         "--command",
@@ -33,6 +21,21 @@ def args_parser() -> Namespace:
         required=True,
         help="Command",
         dest="command",
+    )
+
+    # 任意パラメータ
+    optional_args = parser.add_argument_group("optional arguments")
+
+    # 監視ディレクトリ
+    required_args.add_argument(
+        "--path",
+        action="store",
+        nargs="?",
+        default=".",
+        type=str,
+        required=False,
+        help="Target Path",
+        dest="path",
     )
 
     # 監視対象パターン
@@ -61,20 +64,17 @@ def args_parser() -> Namespace:
         dest="ignore_patterns",
     )
 
-    # 任意パラメータ
-    optional_args = parser.add_argument_group("optional arguments")
-
     # 環境変数を設定
     optional_args.add_argument(  # TODO: 環境変数
-        "--env",
+        "--environment",
         "-e",
         action="store",
-        nargs="?",
+        nargs="*",
         default="",
         type=str,
         required=False,
         help="Environmental Variables",
-        dest="env",
+        dest="environment",
     )
 
     # ログ保存先
@@ -102,17 +102,23 @@ def args_parser() -> Namespace:
     )
 
     args = parser.parse_args()
-    if "," in args.patterns[0]:
+    if args.patterns and "," in args.patterns[0]:
         # 監視対象パターンが文字列で入力された場合、配列に分解する
         if 1 < len(args.patterns):
-            raise ValueError("Too many patterns")
+            raise ValueError("Too many patterns parameter")
         args.patterns = args.patterns[0].split(",")
 
-    if "," in args.ignore_patterns[0]:
+    if args.ignore_patterns and "," in args.ignore_patterns[0]:
         # 監視非対象パターンが文字列で入力された場合、配列に分解する
         if 1 < len(args.ignore_patterns):
-            raise ValueError("Too many patterns")
+            raise ValueError("Too many ignore patterns parameter")
         args.ignore_patterns = args.ignore_patterns[0].split(",")
+
+    if args.environment and "," in args.environment[0]:
+        # 環境変数が文字列で入力された場合、配列に分解する
+        if 1 < len(args.environment):
+            raise ValueError("Too many enviroment parameter")
+        args.environment = args.environment[0].split(",")
 
     if 1 == len(args.command):
         # コマンドパラメータに入力された値が一つだった場合、分割する
