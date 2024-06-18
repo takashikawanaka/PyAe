@@ -53,8 +53,10 @@ class Observer(PollingObserver):
 
     def loop(self) -> Iterator[str]:
         super().start()
+        self.__process.start()
         try:
             while super().is_alive():
+                self.__process.update_state()
                 for line in self.__process.stdout:
                     yield line.strip()
 
@@ -62,6 +64,7 @@ class Observer(PollingObserver):
             raise
 
         finally:
+            self.__process.stop()
             super().stop()
             super().join(timeout=1)
 

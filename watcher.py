@@ -24,7 +24,6 @@ if __name__ == "__main__":
 
     print(f"Start watching... {args.path}")
     try:
-
         for line in observer.loop():
             print(line)
             time.sleep(1)

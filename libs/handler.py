@@ -20,6 +20,7 @@ class Handler(PatternMatchingEventHandler):
         ignore_patterns: list[str],
         process: Callable,
     ) -> None:
+        # 監視対象パス
         self.path: str = path
 
         # ハンドラ初期化
@@ -36,9 +37,8 @@ class Handler(PatternMatchingEventHandler):
             for file in files:
                 self.__set_file_hash(path=os.path.join(dir, file))
 
-        # プロセス
+        # 実行プロセス
         self.__process: Callable = process
-        self.__process.execute()
 
     def on_moved(self, event: FileMovedEvent) -> None:
         print(f"File moved, {event.src_path} to {event.src_path}")
