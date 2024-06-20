@@ -15,10 +15,12 @@ if __name__ == "__main__":
     print("Initialization...")
     # オブザーバー
     observer: Observer = Observer(
+        command=args.command,
         path=args.path,
         patterns=args.patterns,
         ignore_patterns=args.ignore_patterns,
-        command=args.command,
+        dot=args.dot,
+        environment=args.environment,
         reload=args.reload,
     )
 

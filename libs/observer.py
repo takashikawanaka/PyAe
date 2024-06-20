@@ -10,10 +10,12 @@ class Observer(PollingObserver):
 
     def __init__(
         self,
+        command: list[str],
         path: str,
         patterns: list[str],
         ignore_patterns: list[str],
-        command: list[str],
+        dot: bool,
+        environment: dict[str, str],
         reload: bool,
     ) -> None:
         # オブザーバ初期化
@@ -27,6 +29,10 @@ class Observer(PollingObserver):
             command=command,
             reload=reload,
         )
+
+        if dot == True:
+            ignore_patterns.append("./*")
+            ignore_patterns.append(".*/.*")
 
         # ハンドラ
         self.__handler: Handler = Handler(

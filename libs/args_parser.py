@@ -64,6 +64,17 @@ def args_parser() -> Namespace:
         dest="ignore_patterns",
     )
 
+    # ドットファイルを監視
+    optional_args.add_argument(
+        "--dot_file",
+        "-d",
+        action="store_true",
+        default=False,
+        required=False,
+        help="Dot File",
+        dest="dot",
+    )
+
     # 環境変数を設定
     optional_args.add_argument(  # TODO: 環境変数
         "--environment",
